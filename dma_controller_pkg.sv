@@ -22,8 +22,11 @@ parameter DMA_CCR_CR    = 2;
         parameter DMA_CCR_CR_PINC     = 6;
         parameter DMA_CCR_CR_MINC     = 7;
         parameter DMA_CCR_CR_PSIZE0   = 8;
+        parameter DMA_CCR_CR_PSIZE1   = 9;
         parameter DMA_CCR_CR_MSIZE0   = 10;
+        parameter DMA_CCR_CR_MSIZE1   = 11;
         parameter DMA_CCR_CR_PL0      = 12;
+        parameter DMA_CCR_CR_PL1      = 13;
         parameter DMA_CCR_CR_MEM2MEM  = 14;
 
 parameter DMA_CNDTR_CR  = 3;
@@ -37,6 +40,8 @@ parameter DMA_CPAR_CR   = 4;
 parameter DMA_CMAR_CR   = 5;
         parameter DMA_CMAR_CR_PA0   = 0;
         parameter DMA_CMAR_CR_PA31  = 31;
+
+parameter DMA_CSR_CNT   = 5;
 
 endpackage : dma_controller_pkg
 
