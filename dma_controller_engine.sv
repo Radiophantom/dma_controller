@@ -32,8 +32,8 @@ always_comb
     case( state )
       IDLE_S:
         begin
-          if( request_valid )
-            next_state = START_S;
+          if( arb_request_valid )
+            next_state = READ_S;
         end
       READ_S:
         begin
@@ -56,27 +56,16 @@ always_comb
     endcase
   end
 
-always_ff @( posedge clk_i, posedge rst_i )
-  if( rst_i )
-    active_channel_reg <= '0;
-  else
-    if( start_transaction_stb )
-      active_channel_reg[channel] <= 1'b1;
-    else
-      if( finish_transaction_stb )
-        active_channel_reg[channel] <= 1'b0;
+always_ff @( posedge clk_i )
+  if( state == IDLE_S && arb_request_valid )
+    active_channel <= arb_request_channel;
 
 always_ff @( posedge clk_i )
-  for( int i = 0; i < CHANNELS_AMOUNT; i++ )
-    if( state == IDLE_S && arb_valid_o && ready && ( arb_channel_o == i ) )
-      acknowledge_o[i] <= 1'b1;
-    else
-      if( ~request_i[i] )
-        acknowledge_o[i] <= 1'b0;
+  dma_ready <= next_state == IDLE_S;
 
 always_ff @( posedge clk_i )
-  if( state == IDLE_S && request_valid )
-    data_cnt <= channel_data_cnt;
+  if( state == IDLE_S && arb_request_valid )
+    data_cnt <= dma_cfg_if.cntd[arb_request_channel];
   else
     if( state == READ_S && readdatavalid )
       if( csr[DMA_CCR_CR][DMA_CCR_CR_DIR] )
